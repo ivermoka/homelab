@@ -1,5 +1,5 @@
 image:
   repository: ghcr.io/ivermoka/portfolio
-  tag: "latest"
+  tag: "f3a3a565100b1e71e48f79b844333e38e63b8f3d"
 replicas: 2
 host: portfolio.home.lan
