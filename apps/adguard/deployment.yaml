@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adguard-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: adguard
+  template:
+    metadata:
+      labels:
+        app: adguard
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: adguard-home
+          image: adguard/adguardhome:v0.107.80
+          ports:
+            - containerPort: 53 #dns
+              name: dns-udp
+              protocol: UDP
+            - containerPort: 53
+              name: dns-tcp
+              protocol: TCP
+            - containerPort: 3000 #initial setup
+              name: http-initial
+            - containerPort: 80 #web gui
+              name: http
+              protocol: TCP
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
+              add: [NET_BIND_SERVICE]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          readinessProbe:
+            tcpSocket:
+              port: 3000 # change to 80 after the setup wizard
+          volumeMounts:
+            - name: work
+              mountPath: /opt/adguardhome/work
+            - name: conf
+              mountPath: /opt/adguardhome/conf
+      volumes:
+        - name: work
+          persistentVolumeClaim:
+            claimName: adguard-work
+        - name: conf
+          persistentVolumeClaim:
+            claimName: adguard-conf
