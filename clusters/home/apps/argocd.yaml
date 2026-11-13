@@ -1,0 +1,12 @@
+spec:
+  sources:
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-cd
+      targetRevision: argo-cd-10.17.1
+      helm:
+        valueFiles:
+          - $values/infra/argocd/values.yaml
+    - repoURL: https://github.com/ivermoka/homelab
+      targetRevision: main
+      ref: values
+  destination: { server: https://kubernetes.default.svc, namespace: argocd }
