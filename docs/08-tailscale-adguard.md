@@ -60,3 +60,16 @@ Login with same account
 
 Follow
 https://jmcglock.substack.com/p/running-adguard-home-on-kubernetes
+
+
+## Troubleshooting  based on what i experienced
+
+In the adguard pod i kept getting this error:
+
+```
+PullImage from image service failed" err="rpc error: code = Unknown desc = fai
+led to pull and unpack image \"docker.io/adguard/adguardhome:v0.107.80\"
+```
+
+The fix was to point /etc/resolv.conf at the real upstream servers that systemd-resolved already knows (in server)
+sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
