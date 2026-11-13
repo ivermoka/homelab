@@ -18,7 +18,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: adguard-home
-          image: adguard/adguardhome:v0.107.80
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 53 #dns
               name: dns-udp
@@ -46,7 +46,7 @@ spec:
               memory: 256Mi
           readinessProbe:
             tcpSocket:
-              port: 3000 # change to 80 after the setup wizard
+              port: {{ .Values.webPort }}
           volumeMounts:
             - name: work
               mountPath: /opt/adguardhome/work

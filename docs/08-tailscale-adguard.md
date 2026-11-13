@@ -58,4 +58,5 @@ Login with same account
 
 `ssh ivermk@<server tailnet ip>` # found in tailscale gui
 
-
+Follow
+https://jmcglock.substack.com/p/running-adguard-home-on-kubernetes

@@ -1,0 +1,9 @@
+image:
+  repository: adguard/adguardhome
+  tag: v0.107.80
+host: adguard.home.lan
+# 3000 during the setup wizard, then 80
+webPort: 3000
+storage:
+  work: 1Gi
+  conf: 100Mi
