@@ -1,0 +1,15 @@
+name: lint
+on: [pull_request, push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install yamllint
+      - run: yamllint -d relaxed .
+      - uses: azure/setup-helm@v4
+      - run: for c in apps/*/; do helm lint "$c"; done
+      - run: |
+          curl -sL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xz
+          for c in apps/*/; do helm template x "$c" | ./kubeconform -strict -summary -ignore-missing-schemas; done
+          ./kubeconform -strict -ignore-missing-schemas -summary clusters/
