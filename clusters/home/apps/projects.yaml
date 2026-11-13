@@ -32,6 +32,7 @@ spec:
   sourceRepos:
     - https://github.com/ivermoka/homelab
     - https://argoproj.github.io/argo-helm
+    - https://bitnami.github.io/sealed-secrets
   destinations:
     - server: https://kubernetes.default.svc
       namespace: '*'
