@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: User workloads (portfolio, media, ...)
+  sourceRepos:
+    - https://github.com/ivermoka/homelab
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+    - server: https://kubernetes.default.svc
+      namespace: '!kube-system'
+    - server: https://kubernetes.default.svc
+      namespace: '!argocd'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: Cluster plumbing (argocd, cert-manager, monitoring, ...)
+  sourceRepos:
+    - https://github.com/ivermoka/homelab
+    - https://argoproj.github.io/argo-helm
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
