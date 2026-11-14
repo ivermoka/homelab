@@ -16,6 +16,8 @@ spec:
         app: adguard
     spec:
       automountServiceAccountToken: false
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
       containers:
         - name: adguard-home
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -28,7 +30,7 @@ spec:
               protocol: TCP
             - containerPort: 3000 #initial setup
               name: http-initial
-            - containerPort: 80 #web gui
+            - containerPort: {{ .Values.webPort }} #web gui
               name: http
               protocol: TCP
           securityContext:
