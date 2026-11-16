@@ -1,1 +1,8 @@
 sealed-secrets-key.backup.yaml
+AdGuardHome.yaml
+
+# Talos: rendered configs hold cluster private keys and admin credentials
+talos/_out/
+talos/*.plain.yaml
+talosconfig
+kubeconfig

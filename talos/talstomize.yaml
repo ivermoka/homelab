@@ -1,0 +1,32 @@
+apiVersion: config.talstomize.dev/v1alpha1
+kind: Talstomize
+
+clusterName: homelab
+controlPlaneEndpoint: https://192.168.0.162:6443
+secrets: ./secrets.yaml
+talosVersion: v1.14.6
+kubernetesVersion: v1.37.1
+
+installer:
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/amdgpu          # RX480 driver
+          - siderolabs/intel-ucode     # CPU microcode (Intel)
+nodes:
+  server-box:
+    ip: 192.168.0.162
+    kind: controlplane
+    patches:
+      - ./patches/00-install.yaml
+
+controlplanePatches:
+  - ./patches/10-scheduling.yaml
+
+patches:
+  - ./patches/20-cni.yaml
+  - ./patches/30-dns.yaml
+  - ./patches/40-volumes.yaml
+  - ./patches/60-cilium-inline.yaml
+  # - ./patches/50-firewall.yaml    # enable only after everything else works (Phase 4, step 10)

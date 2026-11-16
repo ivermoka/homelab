@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+  namespace: argocd
+spec:
+  project: infra
+  sources:
+    - repoURL: https://helm.cilium.io/
+      chart: cilium
+      # Keep in sync with the version passed to talos/gen-cilium.sh
+      targetRevision: 1.20.4
+      helm:
+        valueFiles:
+          - $values/infra/cilium/values.yaml
+    - repoURL: https://github.com/ivermoka/homelab
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

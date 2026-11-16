@@ -1,0 +1,7 @@
+# hostNetwork violates the Pod Security "baseline" level that Talos enforces by default.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Release.Namespace }}
+  labels:
+    pod-security.kubernetes.io/enforce: privileged

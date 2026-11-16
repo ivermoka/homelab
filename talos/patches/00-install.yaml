@@ -1,0 +1,5 @@
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.transport == 'nvme' # the 512 GB Intel NVMe SSD (the only NVMe disk). NOT /dev/sda: that is the 4 TB HDD.

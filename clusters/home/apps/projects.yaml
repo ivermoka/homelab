@@ -33,6 +33,8 @@ spec:
     - https://github.com/ivermoka/homelab
     - https://argoproj.github.io/argo-helm
     - https://bitnami.github.io/sealed-secrets
+    - https://helm.cilium.io/
+    - https://traefik.github.io/charts
   destinations:
     - server: https://kubernetes.default.svc
       namespace: '*'

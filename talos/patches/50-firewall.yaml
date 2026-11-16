@@ -1,0 +1,18 @@
+apiVersion: v1alpha1
+kind: NetworkDefaultActionConfig
+ingress: block
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: apid-ingress
+portSelector: { ports: [50000], protocol: tcp }
+ingress:
+  - subnet: 192.168.0.0/24
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubernetes-api-ingress
+portSelector: { ports: [6443], protocol: tcp }
+ingress:
+  - subnet: 192.168.0.0/24
+# add: trustd 50001, kubelet 10250 (self/cluster only), etcd 2379-2380 (self), HTTP/S 80+443 (LAN), DNS 53 tcp+udp (LAN + ULA fdaa:bbcc:ddee::/64), AdGuard UI port 4444, Tailscale if the node joins it

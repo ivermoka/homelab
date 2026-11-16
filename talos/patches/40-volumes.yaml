@@ -1,0 +1,16 @@
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-path
+provisioning:
+  diskSelector:
+    match: disk.transport == 'nvme' # the 512 GB Intel NVMe SSD (also the system disk)
+  minSize: 50GB
+  maxSize: 150GB
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: media
+provisioning:
+  diskSelector:
+    match: disk.transport == 'sata' # the 4 TB Seagate HDD (the only SATA disk; excludes the USB installer)
+  minSize: 1TB

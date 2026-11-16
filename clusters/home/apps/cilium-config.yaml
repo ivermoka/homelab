@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium-config
+  namespace: argocd
+spec:
+  project: infra
+  source:
+    repoURL: https://github.com/ivermoka/homelab
+    targetRevision: main
+    path: infra/cilium-config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    # The Cilium CRDs appear only once Cilium is running; retry until then.
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
