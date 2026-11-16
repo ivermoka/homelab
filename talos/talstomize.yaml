@@ -29,4 +29,5 @@ patches:
   - ./patches/30-dns.yaml
   - ./patches/40-volumes.yaml
   - ./patches/60-cilium-inline.yaml
+  - ./patches/70-ephemeral-volume.yaml
   # - ./patches/50-firewall.yaml    # enable only after everything else works (Phase 4, step 10)
