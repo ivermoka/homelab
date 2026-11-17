@@ -4,7 +4,7 @@ metadata:
   name: data
 spec:
   accessModes: [ReadWriteOnce]
-  storageClassName: local-path-hdd
+  storageClassName: {{ .Values.storage.data.class }}
   resources:
     requests:
-      storage: 4Ti
+      storage: {{ .Values.storage.data.size }}

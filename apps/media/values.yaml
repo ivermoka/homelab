@@ -1,0 +1,29 @@
+timezone: Europe/Oslo
+puid: 1000
+pgid: 1000
+
+storage:
+  data:
+    class: local-path-hdd # the 4 TB HDD (/var/mnt/media); change if another node is added
+    size: 3Ti # not enforced by local-path
+  configClass: local-path # app config/databases on the SSD
+
+qbittorrent:
+  image:
+    repository: lscr.io/linuxserver/qbittorrent
+    tag: "5.3.0_v2.1.2-ls487"
+  webPort: 8080
+  configSize: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+gluetun:
+  image:
+    repository: ghcr.io/qdm12/gluetun
+    tag: "v3.41.3"
+  serverCountries: Sweden

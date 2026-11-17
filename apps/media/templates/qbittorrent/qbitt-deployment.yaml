@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  labels:
+    app.kubernetes.io/name: qbittorrent
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: qbittorrent
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: qbittorrent
+    spec:
+      containers:
+        - name: qbittorrent
+          image: "{{ .Values.qbittorrent.image.repository }}:{{ .Values.qbittorrent.image.tag }}"
+          env:
+            - name: PUID
+              value: {{ .Values.puid | quote }}
+            - name: PGID
+              value: {{ .Values.pgid | quote }}
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: WEBUI_PORT
+              value: {{ .Values.qbittorrent.webPort | quote }}
+          ports:
+            - name: web
+              containerPort: {{ .Values.qbittorrent.webPort }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+          resources:
+            {{- toYaml .Values.qbittorrent.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: web
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: web
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      initContainers:
+        # native sidecar: starts first, stays running, qbittorrent starts only once the tunnel is healthy
+        - name: gluetun
+          image: "{{ .Values.gluetun.image.repository }}:{{ .Values.gluetun.image.tag }}"
+          restartPolicy: Always
+          securityContext:
+            capabilities:
+              add: [NET_ADMIN]
+          env:
+            - {name: VPN_SERVICE_PROVIDER, value: mullvad}
+            - {name: VPN_TYPE, value: wireguard}
+            - {name: SERVER_COUNTRIES, value: {{ .Values.gluetun.serverCountries | quote }}}
+            - {name: FIREWALL_INPUT_PORTS, value: {{ .Values.qbittorrent.webPort | quote }}}
+            - {name: FIREWALL_OUTBOUND_SUBNETS, value: "10.42.0.0/16,10.43.0.0/16"}
+            - {name: BLOCK_MALICIOUS, value: "on"}
+            - {name: BLOCK_ADS, value: "off"}
+            - {name: BLOCK_SURVEILLANCE, value: "off"}
+            - {name: TZ, value: {{ .Values.timezone | quote }}}
+            - name: WIREGUARD_PRIVATE_KEY
+              valueFrom: {secretKeyRef: {name: vpn, key: wireguard-private-key}}
+            - name: WIREGUARD_ADDRESSES
+              valueFrom: {secretKeyRef: {name: vpn, key: wireguard-addresses}}
+          startupProbe:
+            exec:
+              command: ["/gluetun-entrypoint", "healthcheck"]
+            periodSeconds: 5
+            failureThreshold: 24
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "(ip rule del table 51820; ip -6 rule del table 51820) || true"]
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
