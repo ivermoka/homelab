@@ -12,5 +12,5 @@ kind: UserVolumeConfig
 name: media
 provisioning:
   diskSelector:
-    match: disk.transport == 'sata' # the 4 TB Seagate HDD (the only SATA disk; excludes the USB installer)
+    match: disk.transport == 'sata' # the 4 TB Seagate HDD
   minSize: 1TB
