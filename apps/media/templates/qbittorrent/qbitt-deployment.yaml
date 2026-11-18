@@ -78,6 +78,7 @@ spec:
               valueFrom: {secretKeyRef: {name: vpn, key: wireguard-private-key}}
             - name: WIREGUARD_ADDRESSES
               valueFrom: {secretKeyRef: {name: vpn, key: wireguard-addresses}}
+            - {name: WIREGUARD_ENDPOINT_PORT, value: "53"}
           startupProbe:
             exec:
               command: ["/gluetun-entrypoint", "healthcheck"]
