@@ -28,3 +28,14 @@ gluetun:
     repository: ghcr.io/qdm12/gluetun
     tag: "v3.41.3"
   serverCountries: Sweden
+
+prowlarr:
+  image:
+    repository: lscr.io/linuxserver/prowlarr
+    tag: "3.0.2.5780-ls169"
+  port: 9696
+  host: prowlarr.home.lan
+  configSize: 1Gi
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {meomory: 512Mi}

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prowlarr
+  labels:
+    app.kubernetes.io/name: prowlarr
+spec:
+  selector:
+    app.kubernetes.io/name: prowlarr
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
