@@ -68,9 +68,8 @@ spec:
             - {name: VPN_SERVICE_PROVIDER, value: mullvad}
             - {name: VPN_TYPE, value: wireguard}
             - {name: SERVER_COUNTRIES, value: {{ .Values.gluetun.serverCountries | quote }}}
-            - {name: FIREWALL_INPUT_PORTS, value: "{{ .Values.qbittorrent.webPort }},8888"}
+            - {name: FIREWALL_INPUT_PORTS, value: {{ .Values.qbittorrent.webPort | quote }}}
             - {name: FIREWALL_OUTBOUND_SUBNETS, value: "10.42.0.0/16,10.43.0.0/16"}
-            - {name: HTTPPROXY, value: "on"}
             - {name: BLOCK_MALICIOUS, value: "on"}
             - {name: BLOCK_ADS, value: "off"}
             - {name: BLOCK_SURVEILLANCE, value: "off"}
