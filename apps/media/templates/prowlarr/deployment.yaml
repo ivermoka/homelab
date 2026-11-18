@@ -43,6 +43,18 @@ spec:
             httpGet: {path: /ping, port: web}
             initialDelaySeconds: 60
             periodSeconds: 30
+        - name: flaresolverr
+          image: "{{ .Values.flaresolverr.image.repository }}:{{ .Values.flaresolverr.image.tag }}"
+          env:
+            - {name: HOST, value: "127.0.0.1"}
+            - {name: LOG_LEVEL, value: info}
+            - {name: TZ, value: {{ .Values.timezone | quote }}}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          resources:
+            {{- toYaml .Values.flaresolverr.resources | nindent 12 }}
       initContainers:
         # native sidecar: starts first, stays running, prowlarr starts only once the tunnel is healthy
         - name: gluetun
