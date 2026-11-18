@@ -16,6 +16,12 @@ spec:
       labels:
         app.kubernetes.io/name: qbittorrent
     spec:
+      # IPv4-only cluster: with IPv6 off Gluetun only considers IPv4 Mullvad endpoints
+      # (needs allowedUnsafeSysctls on the kubelet, see talos/patches/80-kubelet-sysctls.yaml)
+      securityContext:
+        sysctls:
+          - {name: net.ipv6.conf.all.disable_ipv6, value: "1"}
+          - {name: net.ipv6.conf.default.disable_ipv6, value: "1"}
       containers:
         - name: qbittorrent
           image: "{{ .Values.qbittorrent.image.repository }}:{{ .Values.qbittorrent.image.tag }}"
