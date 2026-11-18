@@ -17,10 +17,10 @@ spec:
         app.kubernetes.io/name: prowlarr
     spec:
       automountServiceAccountToken: false
-            securityContext:
-      sysctls:
-        - {name: net.ipv6.conf.all.disable_ipv6, value: "1"}
-        - {name: net.ipv6.conf.default.disable_ipv6, value: "1"}
+      securityContext:
+        sysctls:
+          - {name: net.ipv6.conf.all.disable_ipv6, value: "1"}
+          - {name: net.ipv6.conf.default.disable_ipv6, value: "1"}
       containers:
         - name: prowlarr
           image: "{{ .Values.prowlarr.image.repository }}:{{ .Values.prowlarr.image.tag }}"
@@ -55,9 +55,8 @@ spec:
             - {name: VPN_SERVICE_PROVIDER, value: mullvad}
             - {name: VPN_TYPE, value: wireguard}
             - {name: SERVER_COUNTRIES, value: {{ .Values.gluetun.serverCountries | quote }}}
-            - {name: FIREWALL_INPUT_PORTS, value: {{ .Values.prowlarr.webPort | quote }}}
+            - {name: FIREWALL_INPUT_PORTS, value: {{ .Values.prowlarr.port | quote }}}
             - {name: FIREWALL_OUTBOUND_SUBNETS, value: "10.42.0.0/16,10.43.0.0/16"}
-            - {name: HTTPPROXY, value: "on"}
             - {name: BLOCK_MALICIOUS, value: "on"}
             - {name: BLOCK_ADS, value: "off"}
             - {name: BLOCK_SURVEILLANCE, value: "off"}
