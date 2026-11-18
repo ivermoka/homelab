@@ -12,3 +12,6 @@ spec:
     - name: web
       port: 80
       targetPort: web
+    - name: proxy
+      port: 8888
+      targetPort: 8888
