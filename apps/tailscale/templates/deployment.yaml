@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailscale
+  labels:
+    app.kubernetes.io/name: tailscale
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tailscale
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tailscale
+    spec:
+      serviceAccountName: tailscale
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: tailscale
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          env:
+            - {name: TS_USERSPACE, value: "true"}
+            - {name: TS_KUBE_SECRET, value: tailscale-state}
+            - {name: TS_HOSTNAME, value: {{ .Values.hostname | quote }}}
+            - {name: TS_ROUTES, value: {{ .Values.routes | quote }}}
+            - name: TS_AUTHKEY
+              valueFrom: {secretKeyRef: {name: tailscale-auth, key: TS_AUTHKEY}}
+            - name: POD_NAME
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {memory: 256Mi}
