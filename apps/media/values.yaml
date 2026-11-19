@@ -62,8 +62,8 @@ radarr:
 sonarr:
   image:
     repository: lscr.io/linuxserver/sonarr
-    tag: "4.0.20"
-  port: 7979
+    tag: "4.0.20.3014-ls5"
+  port: 8989
   host: sonarr.home.lan
   configSize: 2Gi
   resources:
