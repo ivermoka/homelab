@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+  labels:
+    app.kubernetes.io/name: jellyfin
+  annotations:
+    lbipam.cilium.io/ips: {{ .Values.jellyfin.lanIP | quote }}
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: jellyfin
+  ports:
+    - name: web
+      port: {{ .Values.jellyfin.port }}
+      targetPort: web

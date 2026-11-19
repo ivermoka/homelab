@@ -58,3 +58,16 @@ radarr:
   resources:
     requests: {cpu: 100m, memory: 256Mi}
     limits: {memory: 1Gi}
+
+jellyfin:
+  image:
+    repository: ghcr.io/jellyfin/jellyfin
+    tag: "12.4"
+  port: 8096
+  host: jellyfin.home.lan
+  lanIP: 192.168.0.201
+  configSize: 10Gi
+  cacheLimit: 20Gi
+  resources:
+    requests: {cpu: 250m, memory: 512Mi}
+    limits: {cpu: "3", memory: 4Gi}
