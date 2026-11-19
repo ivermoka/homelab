@@ -59,6 +59,17 @@ radarr:
     requests: {cpu: 100m, memory: 256Mi}
     limits: {memory: 1Gi}
 
+sonarr:
+  image:
+    repository: lscr.io/linuxserver/sonarr
+    tag: "4.0.20"
+  port: 7979
+  host: sonarr.home.lan
+  configSize: 2Gi
+  resources:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {memory: 1Gi}
+
 jellyfin:
   image:
     repository: ghcr.io/jellyfin/jellyfin
