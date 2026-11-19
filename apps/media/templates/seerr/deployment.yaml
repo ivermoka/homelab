@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seerr
+  labels:
+    app.kubernetes.io/name: seerr
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: seerr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: seerr
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: seerr
+          image: "{{ .Values.seerr.image.repository }}:{{ .Values.seerr.image.tag }}"
+          env:
+            - {name: TZ, value: {{ .Values.timezone | quote }}}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: web
+              containerPort: {{ .Values.seerr.port }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+          resources:
+            {{- toYaml .Values.seerr.resources | nindent 12 }}
+          startupProbe:
+            httpGet: {path: /api/v1/settings/public, port: web}
+            periodSeconds: 10
+            failureThreshold: 30
+          readinessProbe:
+            httpGet: {path: /api/v1/settings/public, port: web}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /api/v1/settings/public, port: web}
+            periodSeconds: 30
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: seerr-config
+

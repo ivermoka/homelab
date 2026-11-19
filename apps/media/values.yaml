@@ -82,3 +82,25 @@ jellyfin:
   resources:
     requests: {cpu: 250m, memory: 512Mi}
     limits: {cpu: "3", memory: 4Gi}
+
+seerr:
+  image:
+    repository: ghcr.io/seerr-team/seerr
+    tag: "v3.5.2"
+  port: 5055
+  host: seerr.home.lan
+  configSize: 1Gi
+  resources:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {memory: 1Gi}
+
+bazarr:
+  image:
+    repository: lscr.io/linuxserver/bazarr
+    tag: "v1.6.2-ls373"
+  port: 6767
+  host: bazarr.home.lan
+  configSize: 1Gi
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {memory: 512Mi}
